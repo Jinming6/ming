@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .btnWrap {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <p>时间戳: <span class="timestamp"></span></p>
+    <p class="btnWrap"><button>手动更新</button></p>
+  </div>
+
+  <script src="./zxi123.js"></script>
+  <script type="module">
+    import { WebChecker } from "../dist/update-checker.min.js"
+
+    const timestamp = document.querySelector('.timestamp')
+    timestamp.textContent = Date.now()
+
+    const btnWrap = document.querySelector('.btnWrap')
+    const button = document.querySelector('button')
+    button.addEventListener('click', () => {
+      location.reload(true)
+    })
+
+    const webChecker = new WebChecker({ platform: 0, hashUrl: location.href, duration: 2000, oldHash: "asdwqx" })
+    webChecker.addEventListener('shouldUpdate', () => {
+      btnWrap.style.display = 'block'
+    })
+  </script>
+</body>
+
+</html>

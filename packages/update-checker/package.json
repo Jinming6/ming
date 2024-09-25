@@ -1,0 +1,14 @@
+{
+  "name": "@ming/update-checker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/update-checker.min.js",
+  "types": "dist/types/src/index.d.ts",
+  "scripts": {
+    "build": "rimraf dist && rollup --config rollup.config.ts --configPlugin typescript",
+    "dev": "rollup --watch --config rollup.config.ts --configPlugin typescript"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

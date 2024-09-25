@@ -1,0 +1,67 @@
+{
+  "name": "@jinming6/merge-helper",
+  "version": "1.2.12",
+  "description": "Easily handle cell merges",
+  "main": "dist/merge-helper.min.js",
+  "types": "dist/types/src/main.d.ts",
+  "scripts": {
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js",
+    "build": "rimraf dist && pnpm exec rollup --config rollup.config.ts --configPlugin typescript && pnpm run size",
+    "dev": "pnpm exec rollup --watch --config rollup.config.ts --configPlugin typescript",
+    "release": "semantic-release",
+    "size": "size-limit && gzip-size dist/merge-helper.min.js"
+  },
+  "keywords": [
+    "merge",
+    "merge-helper",
+    "cell-merge",
+    "table-merge"
+  ],
+  "author": "Jinming6 <response965@163.com>",
+  "license": "MIT",
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jinming6/merge-helper"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "docs/CHANGELOG.md"
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "docs/CHANGELOG.md"
+          ]
+        }
+      ]
+    ]
+  },
+  "volta": {
+    "node": "18.20.2",
+    "pnpm": "9.0.4"
+  },
+  "size-limit": [
+    {
+      "limit": "2.99 KB",
+      "path": "dist/merge-helper.min.js"
+    }
+  ]
+}
