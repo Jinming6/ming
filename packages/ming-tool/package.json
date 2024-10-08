@@ -63,8 +63,5 @@
       "limit": "2.99 KB",
       "path": "dist/ming-tool.min.js"
     }
-  ],
-  "dependencies": {
-    "@ming/utils": "workspace:^"
-  }
+  ]
 }

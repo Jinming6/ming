@@ -31,8 +31,9 @@
       location.reload(true)
     })
 
-    const webChecker = new WebChecker({ platform: 0, hashUrl: location.href, duration: 2000, oldHash: "asdwqx" })
-    webChecker.addEventListener('shouldUpdate', () => {
+    // const webChecker = new WebChecker({ platform: 0, websiteUrl: 'http://172.16.20.31:8090', duration: 2000 })
+    const webChecker = new WebChecker({ platform: 0, websiteUrl: location.href, duration: 2000 })
+    webChecker.addEventListener('update', () => {
       btnWrap.style.display = 'block'
     })
   </script>

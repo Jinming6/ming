@@ -1,11 +1,9 @@
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
-import { fileURLToPath } from 'url';
 import replace from '@rollup/plugin-replace';
 import dotenv from 'dotenv';
 import type { RollupOptions } from 'rollup';
-import alias from '@rollup/plugin-alias';
 
 dotenv.config();
 
@@ -37,14 +35,6 @@ const config: RollupOptions = {
     replace({
       'process.env.PACKAGE_NAME': JSON.stringify(process.env.PACKAGE_NAME),
       preventAssignment: true,
-    }),
-    alias({
-      entries: [
-        {
-          find: '@utils',
-          replacement: fileURLToPath(new URL('../../utils', import.meta.url)),
-        },
-      ],
     }),
   ],
   external: ['lodashEs', 'compareVersions'],

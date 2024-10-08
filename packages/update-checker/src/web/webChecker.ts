@@ -1,52 +1,99 @@
+import { isString } from 'lodash-es';
 import { type WebCheckerOpts } from './models/types';
+import localforage from 'localforage';
+import { scriptReg, scriptSrcReg } from '../utils/regexp';
+
+localforage.config({
+  driver: localforage.LOCALSTORAGE,
+});
+
+const HASH_KEY = 'updateCheckerHash';
 
 /**
  * Web更新检测器
  */
 export default class WebChecker extends EventTarget {
-  hashUrl: WebCheckerOpts['hashUrl'];
+  websiteUrl: WebCheckerOpts['websiteUrl'];
   duration: WebCheckerOpts['duration'];
-  timer;
-  oldHash: WebCheckerOpts['oldHash'];
+  timer?: NodeJS.Timeout;
+  currentHash?: string;
 
   constructor(options: WebCheckerOpts) {
     super();
-    this.hashUrl = options.hashUrl;
+    this.websiteUrl = options.websiteUrl;
     this.duration = options.duration;
-    this.oldHash = options.oldHash;
 
-    this.webPollingHash();
-    this.timer = setInterval(() => {
-      this.webPollingHash();
-    }, this.duration);
+    if (!isString(this.websiteUrl)) {
+      console.warn('websiteUrl必须是字符串');
+      return;
+    }
+
+    localforage
+      .getItem(HASH_KEY)
+      .then(async (value) => {
+        console.log('getItem', value);
+        // 首次安装该插件
+        if (!isString(value) || value == null) {
+          const newHash = await this.getWebsiteUrlHash(this.websiteUrl);
+          await this.setCurrentHash(newHash);
+          return;
+        }
+
+        await this.setCurrentHash(value);
+        // 检测hash值是否更新
+        await this.webPollingHash();
+        this.timer = setInterval(() => {
+          void this.webPollingHash();
+        }, this.duration);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   /**
    * 轮询检测hash值是否更新
    */
-  webPollingHash(): void {
-    if (typeof this.hashUrl !== 'string') {
-      console.warn('hashUrl必须是字符串');
-      clearInterval(this.timer);
-      return;
+  async webPollingHash(): Promise<void> {
+    try {
+      const newHash = await this.getWebsiteUrlHash(this.websiteUrl);
+      // console.log('scripts', scripts);
+      console.log('newHash', newHash);
+      console.log('currentHash', this.currentHash);
+      if (newHash !== this.currentHash) {
+        this.dispatchEvent(new Event('update'));
+        clearInterval(this.timer);
+      }
+      // if (this.currentHash !== newHash) {
+      // if (count === 2) {
+      //   clearInterval(this.timer);
+      //   this.dispatchEvent(new Event('shouldUpdate'));
+      // }
+    } catch (e) {
+      console.error(e);
     }
-    fetch(this.hashUrl, { mode: 'no-cors' })
-      .then(async (res) => await res.text())
-      .then((html) => {
-        // TODO 版本比较逻辑待开发
-        const scriptRegex = /<script(?:\s+[^>]*)?>(.*?)<\/script\s*>/gi;
-        const scripts = html.match(scriptRegex) ?? [];
-        console.log('scripts', scripts);
-        // console.log(html);
-        // const newHash = scripts[0];
-        // if (this.oldHash !== newHash) {
-        // if (count === 2) {
-        //   clearInterval(this.timer);
-        //   this.dispatchEvent(new Event('shouldUpdate'));
-        // }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  }
+
+  /**
+   * 获取网站的hash值
+   */
+  async getWebsiteUrlHash(websiteUrl: string): Promise<string | undefined> {
+    try {
+      const html = await fetch(websiteUrl, { mode: 'no-cors' }).then(
+        async (res) => await res.text(),
+      );
+      const scripts = html.match(scriptReg) ?? [];
+      const match = scripts[0]?.match(scriptSrcReg);
+      if (match != null) {
+        return match[1];
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async setCurrentHash(value: string | undefined): Promise<void> {
+    this.currentHash = value;
+    await localforage.setItem(HASH_KEY, value);
   }
 }
