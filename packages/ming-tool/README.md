@@ -4,14 +4,14 @@
 
 ## Features
 
-- ✅ Drop-down option mapping
-- ✅ Null value replacement display
-- ✅ Download the file
-- ✅ Get random colors
-- ✅ Convert the image to webp format
-- ✅ Get the file name and suffix based on the url
-- ✅ Get file names and suffixes according to content-disposition
-- ✅ Browser compatibility tips
+- [x] Drop-down option mapping
+- [x] Null value replacement display
+- [x] Download the file
+- [x] Get random colors
+- [x] Convert the image to webp format
+- [x] Get the file name and suffix based on the url
+- [x] Get file names and suffixes according to content-disposition
+- [x] Browser compatibility tips
 
 ## Summary
 

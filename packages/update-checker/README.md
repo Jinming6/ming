@@ -6,5 +6,5 @@ PS: Developing
 
 ## Feature
 
-- 🚧 Support for web
-- 🚧 Support for uniapp
+- [ ] Support for web
+- [ ] Support for uniapp
