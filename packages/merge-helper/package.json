@@ -24,7 +24,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jinming6/merge-helper"
+    "url": "https://github.com/Jinming6/ming",
+    "directory": "packages/merge-helper"
   },
   "config": {
     "commitizen": {
