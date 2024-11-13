@@ -1,7 +1,4 @@
-export enum ColorType {
-  RGB = 'rgb',
-  HEX = 'hex',
-}
+import { type ColorType } from './enums';
 
 export interface GetRandomColorOptions {
   /**

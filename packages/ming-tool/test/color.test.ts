@@ -1,5 +1,5 @@
+import { ColorType } from '../src/color/models/enums';
 import { getRandomColor, getRandomHex, getRandomRgb } from '../src/main';
-import { ColorType } from '../src/models/color';
 
 describe('color', () => {
   test('获取随机rgb', () => {

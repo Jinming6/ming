@@ -4,7 +4,7 @@ import type {
   Options,
   DataSourceItem,
   FieldsName,
-} from '../models/option';
+} from './models/interfaces';
 
 export const DefaultFieldsName: FieldsName = { label: 'label', value: 'value' };
 

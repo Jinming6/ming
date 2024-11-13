@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 
+import { InputType } from '../src/file/models/enums';
 import {
   downloadArrayBuffer,
   downloadFile,
@@ -9,7 +10,6 @@ import {
   downloadUrl,
 } from '../src/main';
 import { jest } from '@jest/globals';
-import { InputType } from '../src/models/file';
 
 describe('file', () => {
   window.URL.createObjectURL = jest.fn(() => '');

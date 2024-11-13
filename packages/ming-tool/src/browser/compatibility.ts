@@ -5,7 +5,7 @@ import type {
   BrowserMatch,
   BrowserOption,
   CompatibilityOptions,
-} from '../models/browser';
+} from './models/interfaces';
 
 /**
  * 浏览器兼容性提示
