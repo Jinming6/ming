@@ -12,6 +12,7 @@
 - [x] Get the file name and suffix based on the url
 - [x] Get file names and suffixes according to content-disposition
 - [x] Browser compatibility tips
+- [x] Request/receive parameter formatting
 - [ ] Browser version prompt
 - [ ] Web page update detection
 

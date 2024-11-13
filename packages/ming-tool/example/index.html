@@ -226,6 +226,15 @@
     console.log(mingTool.getFilenameFromDisposition("attachment; filename*=UTF-8''%e4%b8%ad%e6%96%87.txt"))
     console.log(mingTool.getFilenameFromDisposition("attachment"))
     console.log(mingTool.getFilenameFromDisposition())
+
+    // 日期参数处理
+    console.log(mingTool.splitDateRange({ dateRange: ['2024-11-13', '2024-11-14'], outStartField: 'start', outEndField: 'end' }))
+    console.log(mingTool.splitDateRange({ dateRange: [Date.now(), Date.now()], outStartField: 'start', outEndField: 'end' }))
+    console.log(mingTool.splitDateRange({ dateRange: [] }))
+
+    console.log('combineDateRange', mingTool.combineDateRange({ inStartField: 'start', inEndField: 'end', obj: { start: '2024-11-13', end: '2024-11-14' } }))
+    console.log('combineDateRange', mingTool.combineDateRange({ obj: { startDate: Date.now(), endDate: Date.now() } }))
+    console.log('combineDateRange', mingTool.combineDateRange({ obj: {} }))
   </script>
 </body>
 
