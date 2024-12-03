@@ -1,6 +1,6 @@
 {
   "name": "@jinming6/merge-helper",
-  "version": "1.2.13",
+  "version": "1.2.14",
   "description": "Easily handle cell merges",
   "main": "dist/merge-helper.min.js",
   "types": "dist/types/src/main.d.ts",
@@ -64,5 +64,8 @@
       "limit": "2.99 KB",
       "path": "dist/merge-helper.min.js"
     }
+  ],
+  "files": [
+    "dist"
   ]
 }
