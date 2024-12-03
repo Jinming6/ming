@@ -1,225 +1,214 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/element-plus/dist/index.css"
-    />
-    <style type="text/css">
-      .discord {
-        text-decoration: line-through;
-      }
-    </style>
-  </head>
 
-  <body>
-    <div id="app">
-      <el-space>
-        <el-button type="primary" @click="handleCapture">截图</el-button>
-        <el-button @click="handleReCalc">重新计算</el-button>
-        <el-radio-group v-model="mode" @change="getTableData">
-          <el-radio :label="Mode.Row" size="large">行</el-radio>
-          <el-radio :label="Mode.Col" size="large">列</el-radio>
-          <el-radio class="discord" :label="Mode.RowCol" size="large"
-            >行 + 列 (废弃)</el-radio
-          >
-        </el-radio-group>
-      </el-space>
-      <el-table
-        ref="tableRef"
-        :data="tableData"
-        style="width: 100%"
-        :span-method="spanMethod"
-        border
-      >
-        <el-table-column
-          v-if="mode === Mode.Col"
-          label="序号"
-          type="index"
-          width="80"
-        ></el-table-column>
-        <el-table-column v-else label="序号" width="80">
-          <template #default="{ row }"> {{ getSortNo(row) }} </template>
-        </el-table-column>
-        <el-table-column
-          v-for="item in columns"
-          :prop="item.prop"
-          :label="item.label"
-        ></el-table-column>
-        <el-table-column label="操作">
-          <template #default="{ row, $index }">
-            <el-button @click="handleDel($index)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <style type="text/css">
+    .discord {
+      text-decoration: line-through;
+    }
+  </style>
+</head>
 
-    <script src="https://unpkg.com/vue@3"></script>
-    <script src="https://unpkg.com/element-plus"></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
-      integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script type="module">
-      import * as mergeHelper from '../dist/merge-helper.min.js';
-      const { createApp, ref, onMounted } = Vue;
-      const { Mode, getMergedData, getFieldSpan, constants, getSortNo } =
-        mergeHelper;
+<body>
+  <div id="app">
+    <el-space>
+      <el-button type="primary" @click="handleCapture">截图</el-button>
+      <el-button @click="handleReCalc">重新计算</el-button>
+      <el-radio-group v-model="mode" @change="getTableData">
+        <el-radio :label="Mode.Row" size="large">行</el-radio>
+        <el-radio :label="Mode.Col" size="large">列</el-radio>
+        <el-radio class="discord" :label="Mode.RowCol" size="large">行 + 列 (废弃)</el-radio>
+      </el-radio-group>
+    </el-space>
+    <el-table ref="tableRef" :data="tableData" style="width: 100%" :span-method="spanMethod" border>
+      <el-table-column v-if="mode === Mode.Col" label="序号" type="index" width="80" align="center"></el-table-column>
+      <el-table-column v-else label="序号" width="80" align="center">
+        <template #default="{ row }"> {{ getSortNo(row) }} </template>
+      </el-table-column>
+      <el-table-column v-for="item in columns" :prop="item.prop" :label="item.label" align="center"></el-table-column>
+      <el-table-column label="操作" align="center">
+        <template #default="{ row, $index }">
+          <el-button @click="handleDel($index)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 
-      const app = createApp({
-        setup() {
-          const mode = ref(Mode.Row);
-          const columns = [
-            { prop: 'name', label: '姓名' },
-            { prop: 'address', label: '地址' },
-            { prop: 'date', label: '日期' },
+  <script src="https://unpkg.com/vue@3"></script>
+  <script src="https://unpkg.com/element-plus"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+    integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="module">
+    import * as mergeHelper from '../dist/merge-helper.min.js';
+    const { createApp, ref, onMounted } = Vue;
+    const { Mode, getMergedData, getFieldSpan, constants, getSortNo } =
+      mergeHelper;
+
+    const app = createApp({
+      setup() {
+        const mode = ref(Mode.Row);
+        const columns = [
+          { prop: 'name', label: '姓名' },
+          { prop: 'workNo', label: '工号' },
+          { prop: 'phone', label: '手机号' },
+          { prop: 'address', label: '地址' },
+          { prop: 'date', label: '日期' },
+        ];
+        const tableData = ref([]);
+        let dataSource = [];
+        const getTableData = () => {
+          dataSource = [
+            {
+              id: 0,
+              date: '2024-03-10',
+              name: '张三',
+              address: '山东省青岛市',
+              phone: 18888888888,
+              workNo: 18888888888,
+            },
+            {
+              id: 1,
+              date: '2024-03-11',
+              name: '张三',
+              address: '江苏省南京市',
+              phone: 18888888889,
+              workNo: 18888888889,
+            },
+            {
+              id: 2,
+              date: '2024-03-11',
+              name: '张三',
+              address: '山东省青岛市',
+              phone: 18888888810,
+              workNo: 18888888810,
+            },
+            {
+              id: 3,
+              date: '2024-03-13',
+              name: '张三',
+              address: '山东省青岛市',
+              phone: 18888888811,
+              workNo: 18888888811,
+            },
           ];
-          const tableData = ref([]);
-          let dataSource = [];
-          const getTableData = () => {
-            dataSource = [
+          const options = {
+            mode: mode.value,
+            dataSource,
+            mergeFields: [
               {
-                id: 0,
-                date: '2024-03-10',
-                name: '张三',
-                address: '山东省青岛市',
-              },
-              {
-                id: 1,
-                date: '2024-03-11',
-                name: '张三',
-                address: '张三',
-              },
-              {
-                id: 2,
-                date: '2024-03-12',
-                name: '张三',
-                address: '山东省青岛市',
-              },
-              {
-                id: 3,
-                date: '2024-03-13',
-                name: '张三',
-                address: '山东省青岛市',
-              },
-            ];
-            const options = {
-              mode: mode.value,
-              dataSource,
-              mergeFields: [
-                {
-                  field: 'name',
-                  callback(curItem, nextItem) {
-                    return curItem.name === nextItem.name;
-                  },
+                field: 'name',
+                callback(curItem, nextItem) {
+                  return curItem.name === nextItem.name;
                 },
-                'address',
-                'date',
-              ],
-              genSort: true,
-            };
-            if ([Mode.Col, Mode.RowCol].includes(mode.value)) {
-              options.columns = columns.map((item) => ({ prop: item.prop }));
-              options.mergeFields = columns.map((item) => item.prop);
-            }
-            if (mode.value === Mode.Col) {
-              delete options.genSort;
-            }
-            const mergedData = getMergedData(options);
-            console.log(mergedData);
-            tableData.value = mergedData;
+              },
+              'address',
+              'date',
+            ],
+            genSort: true,
           };
+          if ([Mode.Col, Mode.RowCol].includes(mode.value)) {
+            options.columns = columns.map((item) => ({ prop: item.prop }));
+            options.mergeFields = columns.map((item) => item.prop);
+          }
+          if (mode.value === Mode.Col) {
+            delete options.genSort;
+          }
+          const mergedData = getMergedData(options);
+          console.log(mergedData);
+          tableData.value = mergedData;
+        };
 
-          const spanMethod = ({ row, column, columnIndex }) => {
-            if (columnIndex === 0) {
-              return mode.value === Mode.Col
-                ? { rowspan: 1, colspan: 1 }
-                : getFieldSpan(row, 'name');
-            }
-            return getFieldSpan(row, column.property);
-          };
+        const spanMethod = ({ row, column, columnIndex }) => {
+          if (columnIndex === 0) {
+            return mode.value === Mode.Col
+              ? { rowspan: 1, colspan: 1 }
+              : getFieldSpan(row, 'name');
+          }
+          return getFieldSpan(row, column.property);
+        };
 
-          onMounted(() => {
-            getTableData();
-          });
+        onMounted(() => {
+          getTableData();
+        });
 
-          const tableRef = ref();
-          const handleCapture = () => {
-            html2canvas(tableRef.value.$el).then((canvas) => {
-              canvas.toBlob((blob) => {
-                handleDownload(blob);
-              });
+        const tableRef = ref();
+        const handleCapture = () => {
+          html2canvas(tableRef.value.$el).then((canvas) => {
+            canvas.toBlob((blob) => {
+              handleDownload(blob);
             });
-          };
+          });
+        };
 
-          const handleDownload = (blob) => {
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `capture-${Date.now()}.png`;
-            link.click();
-            URL.revokeObjectURL(url);
-          };
+        const handleDownload = (blob) => {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `capture-${Date.now()}.png`;
+          link.click();
+          URL.revokeObjectURL(url);
+        };
 
-          const handleReCalc = () => {
-            const options = {
-              mode: mode.value,
-              dataSource,
-              mergeFields: [
-                {
-                  field: 'name',
-                  callback(curItem, nextItem) {
-                    return curItem.name === nextItem.name;
-                  },
+        const handleReCalc = () => {
+          const options = {
+            mode: mode.value,
+            dataSource,
+            mergeFields: [
+              {
+                field: 'name',
+                callback(curItem, nextItem) {
+                  return curItem.name === nextItem.name;
                 },
-                'address',
-                'date',
-              ],
-              genSort: true,
-              reCalc: true,
-            };
-            if ([Mode.Col, Mode.RowCol].includes(mode.value)) {
-              options.columns = columns.map((item) => ({ prop: item.prop }));
-              options.mergeFields = columns.map((item) => item.prop);
-            }
-            if (mode.value === Mode.Col) {
-              delete options.genSort;
-            }
-            const mergedData = getMergedData(options);
-            console.log(mergedData);
-            tableData.value = mergedData;
+              },
+              'address',
+              'date',
+            ],
+            genSort: true,
+            reCalc: true,
           };
+          if ([Mode.Col, Mode.RowCol].includes(mode.value)) {
+            options.columns = columns.map((item) => ({ prop: item.prop }));
+            options.mergeFields = columns.map((item) => item.prop);
+          }
+          if (mode.value === Mode.Col) {
+            delete options.genSort;
+          }
+          const mergedData = getMergedData(options);
+          console.log(mergedData);
+          tableData.value = mergedData;
+        };
 
-          const handleDel = (index) => {
-            dataSource.splice(index, 1);
-            tableData.value = dataSource;
-            handleReCalc();
-          };
+        const handleDel = (index) => {
+          dataSource.splice(index, 1);
+          tableData.value = dataSource;
+          handleReCalc();
+        };
 
-          return {
-            mode,
-            tableData,
-            Mode,
-            spanMethod,
-            getTableData,
-            columns,
-            getSortNo,
-            handleCapture,
-            tableRef,
-            handleReCalc,
-            handleDel,
-          };
-        },
-      });
+        return {
+          mode,
+          tableData,
+          Mode,
+          spanMethod,
+          getTableData,
+          columns,
+          getSortNo,
+          handleCapture,
+          tableRef,
+          handleReCalc,
+          handleDel,
+        };
+      },
+    });
 
-      app.use(ElementPlus);
+    app.use(ElementPlus);
 
-      app.mount('#app');
-    </script>
-  </body>
+    app.mount('#app');
+  </script>
+</body>
+
 </html>
