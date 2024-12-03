@@ -1,6 +1,6 @@
 {
   "name": "@jinming6/ming-tool",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "前端工具库",
   "main": "dist/ming-tool.min.js",
   "types": "dist/types/src/main.d.ts",
@@ -64,5 +64,8 @@
       "limit": "2.99 KB",
       "path": "dist/ming-tool.min.js"
     }
+  ],
+  "files": [
+    "dist"
   ]
 }
