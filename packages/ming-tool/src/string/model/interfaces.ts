@@ -6,21 +6,21 @@ export interface FmtAddressStrOptions {
   /**
    * 是否需要分隔
    */
-  needSplit: boolean;
+  needSplit?: boolean;
   /**
    * 分隔符
    */
-  splitFlag: string;
+  splitFlag?: string;
   /**
    * 是否需要拼接
    */
-  needJoin: boolean;
+  needJoin?: boolean;
   /**
    * 拼接符
    */
-  joinFlag: string;
+  joinFlag?: string;
   /**
    * 额外的字符串数组
    */
-  extraStrArr: string[];
+  extraStrArr?: string[];
 }

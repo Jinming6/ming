@@ -235,6 +235,12 @@
     console.log('combineDateRange', mingTool.combineDateRange({ inStartField: 'start', inEndField: 'end', obj: { start: '2024-11-13', end: '2024-11-14' } }))
     console.log('combineDateRange', mingTool.combineDateRange({ obj: { startDate: Date.now(), endDate: Date.now() } }))
     console.log('combineDateRange', mingTool.combineDateRange({ obj: {} }))
+
+    // 地址格式化
+    console.log(mingTool.fmtAddressStr({ addressStr: '山东省,青岛市,崂山区', needSplit: true, needJoin: true, extraStrArr: ['xx街道xx号'], joinFlag: '' }))
+    console.log(mingTool.fmtAddressStr({ addressStr: '山东省,青岛市,崂山区', needSplit: true, needJoin: true, extraStrArr: ['xx街道xx号'], joinFlag: ',' }))
+    console.log(mingTool.fmtAddressStr({ addressStr: '', needSplit: true, needJoin: true, extraStrArr: ['xx街道xx号'], joinFlag: ',' }))
+    console.log(mingTool.fmtAddressStr({ addressStr: '山东省,青岛市,崂山区', needSplit: true, needJoin: true, extraStrArr: [], joinFlag: ',' }))
   </script>
 </body>
 

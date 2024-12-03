@@ -1,4 +1,4 @@
-import { isPlainObject, isString } from 'lodash-es';
+import { isArray, isPlainObject, isString } from 'lodash-es';
 import { type FmtAddressStrOptions } from './model/interfaces';
 import { warn } from '../utils/warning';
 
@@ -20,7 +20,6 @@ export function replaceEmpty(
 
 /**
  * 格式化地址字符串
- * TODO 待编写测试用例
  */
 export function fmtAddressStr(
   options: FmtAddressStrOptions,
@@ -42,9 +41,13 @@ export function fmtAddressStr(
   }
   let addressArr: string[] = [];
   if (needSplit) {
-    addressArr = addressStr.split(splitFlag);
+    addressArr = addressStr.split(splitFlag).filter((item) => item !== '');
   }
-  addressArr.push(...extraStrArr);
+  if (isArray(extraStrArr)) {
+    addressArr.push(...extraStrArr);
+  } else {
+    warn('extraStrArr必须是一个数组');
+  }
   if (needJoin) {
     return addressArr.join(joinFlag);
   }
