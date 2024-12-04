@@ -4,22 +4,23 @@ import type {
   Options,
   DataSourceItem,
   FieldsName,
+  GetLabelOptions,
 } from './models/interfaces';
+import { DefaultReplaceStr, replaceEmpty } from '../string';
+import { warn } from '../utils/warning';
 
 export const DefaultFieldsName: FieldsName = { label: 'label', value: 'value' };
 
 export class Option {
-  /**
-   * 下拉选项
-   */
   dataSource: DataSourceItem[] = [];
-  /**
-   * 字段名
-   */
   fieldsName: FieldsName = DefaultFieldsName;
 
   constructor(options: Options) {
-    this.init(options);
+    const { dataSource, fieldsName } = options;
+    this.dataSource = isArray(dataSource) ? cloneDeep(dataSource) : [];
+    this.fieldsName = isPlainObject(fieldsName)
+      ? (fieldsName as FieldsName)
+      : DefaultFieldsName;
   }
 
   /**
@@ -30,37 +31,47 @@ export class Option {
   }
 
   /**
-   * 获取label映射
+   * 获取label映射对象
    */
   get labelMap(): LabelMap {
     const map: Record<DataSourceItem['value'], DataSourceItem['label']> = {};
     this.dataSource.forEach((item) => {
       if (this.fieldsName.value in item && this.fieldsName.label in item) {
         const key = item[this.fieldsName.value as keyof typeof item];
-        const value = item[
+        const label = item[
           this.fieldsName.label as keyof typeof item
         ] as DataSourceItem['label'];
-        map[key] = value;
+        map[key] = label;
       }
     });
     return map;
   }
 
   /**
-   * 初始化
+   * 获取label
    */
-  init(options: Options): void {
-    const { dataSource, fieldsName } = options;
-    this.dataSource = isArray(dataSource) ? cloneDeep(dataSource) : [];
-    this.fieldsName = isPlainObject(fieldsName)
-      ? (fieldsName as FieldsName)
-      : DefaultFieldsName;
+  getLabel(options: GetLabelOptions): string {
+    if (!isPlainObject(options)) {
+      warn('getLabel的参数必须是一个对象');
+    }
+    const {
+      key,
+      allowReplaceEmpty = false,
+      replaceStr = DefaultReplaceStr,
+    } = options;
+    const label = this.labelMap[key];
+    return allowReplaceEmpty
+      ? (replaceEmpty(label, replaceStr) as string)
+      : label;
   }
 
   /**
    * 更新
    */
   update(options: Options): void {
+    if (!isPlainObject(options)) {
+      warn('update的参数必须是一个对象');
+    }
     const { dataSource, fieldsName } = options;
     if (isArray(dataSource)) {
       this.dataSource = cloneDeep(dataSource);

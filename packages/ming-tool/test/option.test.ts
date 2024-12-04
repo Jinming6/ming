@@ -1,4 +1,4 @@
-import { Option } from '../src/main';
+import { DefaultReplaceStr, Option } from '../src/main';
 
 describe('option', () => {
   const dataSource = [
@@ -46,5 +46,21 @@ describe('option', () => {
     });
 
     expect(dataSource.length === option.options.length).toBe(true);
+  });
+
+  test('未匹配到label时, 返回空值替换字符', () => {
+    const emptyDataSource = [
+      {
+        label: '选项1',
+        value: 0,
+      },
+    ];
+    const options = new Option({
+      dataSource: emptyDataSource,
+    });
+
+    const result = options.getLabel({ key: 'foo', allowReplaceEmpty: true });
+
+    expect(result).toBe(DefaultReplaceStr);
   });
 });

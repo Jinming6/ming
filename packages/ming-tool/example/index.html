@@ -173,6 +173,9 @@
     ];
     const option = new mingTool.Option({ dataSource });
     console.log(option)
+    console.log('getLabel1', option.getLabel({ key: 3, allowReplaceEmpty: true }))
+    console.log('getLabel2', option.getLabel({ key: 3, allowReplaceEmpty: true, replaceStr: '~~' }))
+    console.log('getLabel3', option.getLabel({ key: 1 }))
     setTimeout(() => {
       dataSource.push({
         label: '继续',
@@ -217,10 +220,7 @@
       }
     })
 
-    window.onload = () => {
-      let compatibility = new mingTool.Compatibility({ minBrowserVersion: { chrome: { minVersion: '125', } } })
-    }
-
+    // 获取文件名
     console.log(mingTool.getFilenameFromDisposition('attachment; filename="example.txt"'))
     console.log(mingTool.getFilenameFromDisposition('attachment; filename=example.txt'))
     console.log(mingTool.getFilenameFromDisposition("attachment; filename*=UTF-8''%e4%b8%ad%e6%96%87.txt"))
