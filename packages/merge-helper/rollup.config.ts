@@ -13,8 +13,23 @@ const config: RollupOptions = {
     {
       dir: 'dist',
       format: 'es',
-      entryFileNames: 'merge-helper.min.js',
-      chunkFileNames: 'chunks/[name]-[hash].js',
+      entryFileNames: 'es/merge-helper.min.js',
+      chunkFileNames: 'es/chunks/[name]-[hash].js',
+      plugins: [terser()],
+      globals: {
+        lodashEs: '_',
+      },
+      manualChunks(id: string) {
+        if (id.includes('node_modules')) {
+          return 'vendor';
+        }
+      },
+    },
+    {
+      dir: 'dist',
+      format: 'cjs',
+      entryFileNames: 'cjs/merge-helper.min.js',
+      chunkFileNames: 'cjs/chunks/[name]-[hash].js',
       plugins: [terser()],
       globals: {
         lodashEs: '_',

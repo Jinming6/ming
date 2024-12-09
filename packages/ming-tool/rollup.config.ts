@@ -13,8 +13,24 @@ const config: RollupOptions = {
     {
       dir: 'dist',
       format: 'es',
-      entryFileNames: 'ming-tool.min.js',
-      chunkFileNames: 'chunks/[name]-[hash].js',
+      entryFileNames: 'es/ming-tool.min.js',
+      chunkFileNames: 'es/chunks/[name]-[hash].js',
+      plugins: [terser()],
+      globals: {
+        lodashEs: '_',
+        compareVersions: 'compareVersions',
+      },
+      manualChunks(id: string) {
+        if (id.includes('node_modules')) {
+          return 'vendor';
+        }
+      },
+    },
+    {
+      dir: 'dist',
+      format: 'cjs',
+      entryFileNames: 'cjs/ming-tool.min.js',
+      chunkFileNames: 'cjs/chunks/[name]-[hash].js',
       plugins: [terser()],
       globals: {
         lodashEs: '_',
