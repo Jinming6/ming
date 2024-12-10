@@ -28,10 +28,40 @@ const config: RollupOptions = {
     },
     {
       dir: 'dist',
+      format: 'es',
+      entryFileNames: 'es/ming-tool.js',
+      chunkFileNames: 'es/chunks/[name]-[hash].js',
+      globals: {
+        lodashEs: '_',
+        compareVersions: 'compareVersions',
+      },
+      manualChunks(id: string) {
+        if (id.includes('node_modules')) {
+          return 'vendor';
+        }
+      },
+    },
+    {
+      dir: 'dist',
       format: 'cjs',
       entryFileNames: 'cjs/ming-tool.min.js',
       chunkFileNames: 'cjs/chunks/[name]-[hash].js',
       plugins: [terser()],
+      globals: {
+        lodashEs: '_',
+        compareVersions: 'compareVersions',
+      },
+      manualChunks(id: string) {
+        if (id.includes('node_modules')) {
+          return 'vendor';
+        }
+      },
+    },
+    {
+      dir: 'dist',
+      format: 'cjs',
+      entryFileNames: 'cjs/ming-tool.js',
+      chunkFileNames: 'cjs/chunks/[name]-[hash].js',
       globals: {
         lodashEs: '_',
         compareVersions: 'compareVersions',
