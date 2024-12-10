@@ -27,10 +27,38 @@ const config: RollupOptions = {
     },
     {
       dir: 'dist',
+      format: 'es',
+      entryFileNames: 'es/merge-helper.js',
+      chunkFileNames: 'es/chunks/[name]-[hash].js',
+      globals: {
+        lodashEs: '_',
+      },
+      manualChunks(id: string) {
+        if (id.includes('node_modules')) {
+          return 'vendor';
+        }
+      },
+    },
+    {
+      dir: 'dist',
       format: 'cjs',
       entryFileNames: 'cjs/merge-helper.min.js',
       chunkFileNames: 'cjs/chunks/[name]-[hash].js',
       plugins: [terser()],
+      globals: {
+        lodashEs: '_',
+      },
+      manualChunks(id: string) {
+        if (id.includes('node_modules')) {
+          return 'vendor';
+        }
+      },
+    },
+    {
+      dir: 'dist',
+      format: 'cjs',
+      entryFileNames: 'cjs/merge-helper.js',
+      chunkFileNames: 'cjs/chunks/[name]-[hash].js',
       globals: {
         lodashEs: '_',
       },
