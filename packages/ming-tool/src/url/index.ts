@@ -18,6 +18,8 @@ export function getFilenameFromUrl(url: string): string {
  */
 export function getFilenameFromDisposition(
   contentDisposition: string,
+  decode = true,
+  decodeCallback = decodeURIComponent,
 ): string | null {
   if (!isString(contentDisposition)) return null;
 
@@ -27,20 +29,22 @@ export function getFilenameFromDisposition(
     const filenameStar = filenameStarMatch[0];
     const parts = filenameStar.split("'");
     if (parts.length === 3) {
-      return decodeURIComponent(parts[2]);
+      return decode ? decodeCallback(parts[2]) : parts[2];
     }
   }
 
   // 尝试解析 `filename`
   const filenameMatch = contentDisposition.match(/filename="([^"]+)"/);
   if (filenameMatch != null) {
-    return filenameMatch[1];
+    return decode ? decodeCallback(filenameMatch[1]) : filenameMatch[1];
   }
 
   // 尝试解析未加引号的 `filename`
   const filenameMatchUnquoted = contentDisposition.match(/filename=([^;]+)/);
   if (filenameMatchUnquoted != null) {
-    return filenameMatchUnquoted[1];
+    return decode
+      ? decodeCallback(filenameMatchUnquoted[1])
+      : filenameMatchUnquoted[1];
   }
 
   return null;
