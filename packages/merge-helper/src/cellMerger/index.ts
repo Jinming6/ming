@@ -204,12 +204,9 @@ export class CellMerger {
     for (let i = 0; i < dataSource.length; i++) {
       const item = dataSource[i];
 
-      // 如果要求排序，则初始化排序字段
-      if (this.isShouldSort(field)) {
-        item[SORT_NO_KEY] = startNo;
-      }
-
+      // 如果是第一行，则直接赋值 startNo
       if (preItem == null) {
+        item[SORT_NO_KEY] = startNo;
         preItem = item;
         continue;
       }
@@ -224,12 +221,12 @@ export class CellMerger {
         preItem[MERGE_OPTS_KEY][field].rowspan += 1;
         item[MERGE_OPTS_KEY][field].rowspan = 0;
       } else {
+        // 在这里递增 startNo，确保每个合并组的编号不同
+        if (this.isShouldSort(field)) {
+          startNo += 1;
+          item[SORT_NO_KEY] = startNo; // 新合并组的第一行要更新 SORT_NO_KEY
+        }
         preItem = item;
-      }
-
-      // 如果当前是指定的排序字段，则排序号累加
-      if (this.sortBy === field) {
-        startNo += 1;
       }
     }
   }
