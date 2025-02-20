@@ -9,7 +9,8 @@
     "build": "rimraf dist && pnpm exec rollup --config rollup.config.ts --configPlugin typescript && pnpm run size",
     "dev": "pnpm exec rollup --watch --config rollup.config.ts --configPlugin typescript",
     "release": "semantic-release",
-    "size": "size-limit && gzip-size dist/es/merge-helper.min.js"
+    "size": "size-limit && gzip-size dist/es/merge-helper.min.js",
+    "publish": "pnpm run build && pnpm publish --access public"
   },
   "keywords": [
     "merge",

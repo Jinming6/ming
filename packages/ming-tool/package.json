@@ -11,7 +11,8 @@
     "dev": "rollup --watch --config rollup.config.ts --configPlugin typescript",
     "release": "semantic-release",
     "size": "size-limit && gzip-size dist/es/ming-tool.min.js",
-    "example:server": "node ./example/server.js"
+    "example:server": "node ./example/server.js",
+    "publish": "pnpm run build && pnpm publish --access public"
   },
   "keywords": [
     "frontend-tool",
