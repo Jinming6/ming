@@ -77,7 +77,7 @@ export function validateMergeFields(
     if (!validCols) {
       return false;
     }
-    if (mergeFields.length !== columns?.length ?? 0) {
+    if (mergeFields.length !== columns?.length) {
       warn('mergeFields与columns的数组长度不一致');
       return false;
     }

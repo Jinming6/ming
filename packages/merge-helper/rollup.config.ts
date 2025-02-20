@@ -7,6 +7,20 @@ import type { RollupOptions } from 'rollup';
 
 dotenv.config();
 
+const terserConfig = terser({
+  mangle: {
+    reserved: [
+      'isArray',
+      'isString',
+      'isPlainObject',
+      'isBoolean',
+      'cloneDeep',
+      'isFunction',
+    ],
+    properties: false, // 避免属性名被压缩
+  },
+});
+
 const config: RollupOptions = {
   input: 'src/main.ts',
   output: [
@@ -15,10 +29,7 @@ const config: RollupOptions = {
       format: 'es',
       entryFileNames: 'es/merge-helper.min.js',
       chunkFileNames: 'es/chunks/[name]-[hash].js',
-      plugins: [terser()],
-      globals: {
-        lodashEs: '_',
-      },
+      plugins: [terserConfig],
       manualChunks(id: string) {
         if (id.includes('node_modules')) {
           return 'vendor';
@@ -30,9 +41,6 @@ const config: RollupOptions = {
       format: 'es',
       entryFileNames: 'es/merge-helper.js',
       chunkFileNames: 'es/chunks/[name]-[hash].js',
-      globals: {
-        lodashEs: '_',
-      },
       manualChunks(id: string) {
         if (id.includes('node_modules')) {
           return 'vendor';
@@ -44,10 +52,7 @@ const config: RollupOptions = {
       format: 'cjs',
       entryFileNames: 'cjs/merge-helper.min.js',
       chunkFileNames: 'cjs/chunks/[name]-[hash].js',
-      plugins: [terser()],
-      globals: {
-        lodashEs: '_',
-      },
+      plugins: [terserConfig],
       manualChunks(id: string) {
         if (id.includes('node_modules')) {
           return 'vendor';
@@ -59,9 +64,6 @@ const config: RollupOptions = {
       format: 'cjs',
       entryFileNames: 'cjs/merge-helper.js',
       chunkFileNames: 'cjs/chunks/[name]-[hash].js',
-      globals: {
-        lodashEs: '_',
-      },
       manualChunks(id: string) {
         if (id.includes('node_modules')) {
           return 'vendor';
@@ -73,13 +75,15 @@ const config: RollupOptions = {
     typescript({
       tsconfig: './tsconfig.json',
     }),
-    nodeResolve(),
+    nodeResolve({
+      dedupe: ['lodash-es'], // 避免 lodash-es 被重复打包
+      modulesOnly: true, // 只解析 ES 模块，避免 CJS 影响
+    }),
     replace({
       'process.env.PACKAGE_NAME': JSON.stringify(process.env.PACKAGE_NAME),
       preventAssignment: true,
     }),
   ],
-  external: ['lodashEs'],
 };
 
 export default config;
