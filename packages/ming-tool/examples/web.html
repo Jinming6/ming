@@ -111,11 +111,14 @@
   <section>
     <h2>转换为Webp</h2>
     <input type="file" id="fileInput" accept="image/*">
-    <button id="testBtn">Test</button>
+  </section>
+  <section>
+    <h2>在线图片</h2>
+    <button id="testBtn">下载webp</button>
   </section>
 
   <script type="module">
-    import * as mingTool from '../dist/ming-tool.min.js'
+    import * as mingTool from '../dist/es/ming-tool.min.js'
 
     const randomRgbBtn = document.getElementById('randomRgbBtn');
     randomRgbBtn.addEventListener('click', () => {

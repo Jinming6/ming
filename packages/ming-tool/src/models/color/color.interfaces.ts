@@ -1,4 +1,4 @@
-import { type ColorType } from './enums';
+import { type ColorType } from './color.enums';
 
 export interface GetRandomColorOptions {
   /**

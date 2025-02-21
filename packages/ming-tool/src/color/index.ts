@@ -1,5 +1,5 @@
-import { ColorType } from './models/enums';
-import { type GetRandomColorOptions } from './models/interfaces';
+import { ColorType } from '../models/color/color.enums';
+import { type GetRandomColorOptions } from '../models/color/color.interfaces';
 
 /**
  * 随机rgb

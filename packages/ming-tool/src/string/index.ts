@@ -1,5 +1,5 @@
 import { isArray, isPlainObject, isString } from 'lodash-es';
-import { type FmtAddressStrOptions } from './model/interfaces';
+import { type FmtAddressStrOptions } from '../models/string/string.interfaces';
 import { warn } from '../utils/warning';
 
 export const DefaultReplaceStr = '--';

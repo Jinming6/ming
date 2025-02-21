@@ -5,7 +5,7 @@ import type {
   DataSourceItem,
   FieldsName,
   GetLabelOptions,
-} from './models/interfaces';
+} from '../models/option/option.interfaces';
 import { DefaultReplaceStr, replaceEmpty } from '../string';
 import { warn } from '../utils/warning';
 

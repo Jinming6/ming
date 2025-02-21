@@ -3,8 +3,8 @@ import { warn } from '../utils/warning';
 import {
   type DownloadFileOpts,
   type DownloadFileV2Opts,
-} from './models/interfaces';
-import { InputType } from './models/enums';
+} from '../models/file/file.interfaces';
+import { InputType } from '../models/file/file.enums';
 
 /**
  * 下载文件(arrayBuffer)

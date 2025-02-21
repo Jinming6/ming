@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { InputType } from '../src/file/models/enums';
+import { InputType } from '../src/models/file/file.enums';
 import {
   downloadArrayBuffer,
   downloadFile,

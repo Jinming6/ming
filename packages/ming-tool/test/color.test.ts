@@ -1,4 +1,4 @@
-import { ColorType } from '../src/color/models/enums';
+import { ColorType } from '../src/models/color/color.enums';
 import { getRandomColor, getRandomHex, getRandomRgb } from '../src/main';
 
 describe('color', () => {

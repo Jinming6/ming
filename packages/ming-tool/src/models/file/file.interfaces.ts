@@ -1,4 +1,4 @@
-import { type InputType } from './enums';
+import { type InputType } from './file.enums';
 
 /**
  * 下载文件配置

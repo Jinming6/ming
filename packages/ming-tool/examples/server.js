@@ -1,9 +1,5 @@
 const { Option } = require('../dist/cjs/ming-tool.min');
 const http = require('http');
-const {
-  getMergedData,
-  Mode,
-} = require('../../merge-helper/dist/cjs/merge-helper.min');
 
 const list = [
   { id: 0, name: '张三', address: '山东省青岛市', tagValue: '1' },
@@ -26,12 +22,7 @@ const server = http.createServer((req, res) => {
       tagLabel: tagOpts.getLabel({ key: item.tagValue }),
     };
   });
-  const mergedData = getMergedData({
-    mode: Mode.Row,
-    dataSource: fmtList,
-    mergeFields: ['address'],
-  });
-  res.end(JSON.stringify(mergedData, null, 2));
+  res.end(JSON.stringify(fmtList, null, 2));
 });
 
 server.listen(3000, () => {
