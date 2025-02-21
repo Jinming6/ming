@@ -1,6 +1,6 @@
 .eslintrc.js
 dist
-example
+examples
 rollup.config.ts
 test
 jest.config.js

@@ -10,13 +10,25 @@
     .discord {
       text-decoration: line-through;
     }
+
+    .toolbar {
+      margin-left: 20px;
+    }
+
+    .tableWrap {
+      padding: 10px;
+    }
+
+    .tableCard {
+      padding: 10px;
+    }
   </style>
 </head>
 
 <body>
   <div id="app">
-    <el-space>
-      <el-button type="primary" @click="handleCapture">截图</el-button>
+    <el-space class="toolbar">
+      <el-button type="success" @click="handleCapture">下载截图</el-button>
       <el-button @click="handleReCalc">重新计算</el-button>
       <el-radio-group v-model="mode" @change="getTableData">
         <el-radio :label="Mode.Row" size="large">行</el-radio>
@@ -24,18 +36,23 @@
         <el-radio class="discord" :label="Mode.RowCol" size="large">行 + 列 (废弃)</el-radio>
       </el-radio-group>
     </el-space>
-    <el-table ref="tableRef" :data="tableData" style="width: 100%" :span-method="spanMethod" border>
-      <el-table-column v-if="mode === Mode.Col" label="序号" type="index" width="80" align="center"></el-table-column>
-      <el-table-column v-else label="序号" width="80" align="center">
-        <template #default="{ row }"> {{ getSortNo(row) }} </template>
-      </el-table-column>
-      <el-table-column v-for="item in columns" :prop="item.prop" :label="item.label" align="center"></el-table-column>
-      <el-table-column label="操作" align="center">
-        <template #default="{ row, $index }">
-          <el-button @click="handleDel($index)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div class="tableWrap" ref="tableWrap">
+      <div class="tableCard">
+        <el-table :data="tableData" style="width: 100%" :span-method="spanMethod" border>
+          <el-table-column v-if="mode === Mode.Col" label="序号" type="index" width="80" align="center"></el-table-column>
+          <el-table-column v-else label="序号" width="80" align="center">
+            <template #default="{ row }"> {{ getSortNo(row) }} </template>
+          </el-table-column>
+          <el-table-column v-for="item in columns" :prop="item.prop" :label="item.label"
+            align="center"></el-table-column>
+          <el-table-column label="操作" align="center">
+            <template #default="{ row, $index }">
+              <el-button @click="handleDel($index)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </div>
   </div>
 
   <script src="https://unpkg.com/vue@3"></script>
@@ -45,84 +62,55 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script type="module">
     import * as mergeHelper from '../dist/es/merge-helper.js';
+
     const { createApp, ref, onMounted } = Vue;
     const { Mode, getMergedData, getFieldSpan, constants, getSortNo } =
       mergeHelper;
-
     const app = createApp({
       setup() {
         const mode = ref(Mode.Row);
-        const columns = [
-          { prop: 'name', label: '姓名' },
-          { prop: 'workNo', label: '工号' },
-          { prop: 'phone', label: '手机号' },
-          { prop: 'address', label: '地址' },
-          { prop: 'date', label: '日期' },
-        ];
+        const columns = ref([])
         const tableData = ref([]);
-        let dataSource = [];
-        const getTableData = () => {
-          dataSource = [
-            {
-              id: 0,
-              date: '2024-03-10',
-              name: '张三',
-              address: '山东省青岛市',
-              phone: 18888888888,
-              workNo: 18888888888,
+        const tableWrap = ref();
+        const mergeFields = [
+          {
+            field: 'name',
+            callback(curItem, nextItem) {
+              return curItem.name === nextItem.name;
             },
-            {
-              id: 1,
-              date: '2024-03-11',
-              name: '张三',
-              address: '江苏省南京市',
-              phone: 18888888889,
-              workNo: 18888888889,
-            },
-            {
-              id: 2,
-              date: '2024-03-11',
-              name: '张三',
-              address: '山东省青岛市',
-              phone: 18888888810,
-              workNo: 18888888810,
-            },
-            {
-              id: 3,
-              date: '2024-03-13',
-              name: '张三',
-              address: '山东省青岛市',
-              phone: 18888888811,
-              workNo: 18888888811,
-            },
-          ];
+          },
+          'residential',
+          'register',
+          'date'
+        ]
+
+        /**
+         * 获取表格数据
+         */
+        const getTableData = async () => {
+          const { columns: newColumns, dataSource } = await fetch('./data.json').then((res) => res.json())
+          columns.value = newColumns
           const options = {
             mode: mode.value,
+            columns: columns.value,
             dataSource,
-            mergeFields: [
-              {
-                field: 'name',
-                callback(curItem, nextItem) {
-                  return curItem.name === nextItem.name;
-                },
-              },
-              'address',
-              'date',
-            ],
+            mergeFields,
             genSort: true,
           };
           if ([Mode.Col, Mode.RowCol].includes(mode.value)) {
-            options.columns = columns.map((item) => ({ prop: item.prop }));
-            options.mergeFields = columns.map((item) => item.prop);
+            options.columns = columns.value.map((item) => ({ prop: item.prop }));
+            options.mergeFields = columns.value.map((item) => item.prop);
           }
           if (mode.value === Mode.Col) {
             delete options.genSort;
           }
           const mergedData = getMergedData(options);
-          console.log(mergedData);
           tableData.value = mergedData;
         };
 
+        /**
+         * 合并单元格
+         */
         const spanMethod = ({ row, column, columnIndex }) => {
           if (columnIndex === 0) {
             return mode.value === Mode.Col
@@ -132,19 +120,20 @@
           return getFieldSpan(row, column.property);
         };
 
-        onMounted(() => {
-          getTableData();
-        });
-
-        const tableRef = ref();
+        /**
+         * 截图下载
+         */
         const handleCapture = () => {
-          html2canvas(tableRef.value.$el).then((canvas) => {
+          html2canvas(tableWrap.value).then((canvas) => {
             canvas.toBlob((blob) => {
               handleDownload(blob);
             });
           });
         };
 
+        /**
+         * 下载图片
+         */
         const handleDownload = (blob) => {
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
@@ -154,20 +143,14 @@
           URL.revokeObjectURL(url);
         };
 
+        /**
+         * 重新计算
+         */
         const handleReCalc = () => {
           const options = {
             mode: mode.value,
-            dataSource,
-            mergeFields: [
-              {
-                field: 'name',
-                callback(curItem, nextItem) {
-                  return curItem.name === nextItem.name;
-                },
-              },
-              'address',
-              'date',
-            ],
+            dataSource: tableData.value,
+            mergeFields,
             genSort: true,
             reCalc: true,
           };
@@ -183,11 +166,17 @@
           tableData.value = mergedData;
         };
 
+        /**
+         * 删除
+         */
         const handleDel = (index) => {
-          dataSource.splice(index, 1);
-          tableData.value = dataSource;
+          tableData.value.splice(index, 1);
           handleReCalc();
         };
+
+        onMounted(() => {
+          getTableData();
+        });
 
         return {
           mode,
@@ -198,7 +187,7 @@
           columns,
           getSortNo,
           handleCapture,
-          tableRef,
+          tableWrap,
           handleReCalc,
           handleDel,
         };

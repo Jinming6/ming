@@ -70,7 +70,6 @@ export class CellMerger {
     this.sortBy = isString(sortBy)
       ? sortBy
       : getFirstMergeField(this.mergeFields);
-
     this.initMergeOpts(this.dataSource, this.mergeFields);
     if (this.mode === Mode.Row) {
       this.mergeCells(this.dataSource);
@@ -169,7 +168,7 @@ export class CellMerger {
    * 判断是否需要排序
    */
   isShouldSort(field: string): boolean {
-    return isBoolean(this.genSort) && this.sortBy === field;
+    return this.genSort === true && this.sortBy === field;
   }
 
   /**
@@ -206,7 +205,9 @@ export class CellMerger {
 
       // 如果是第一行，则直接赋值 startNo
       if (preItem == null) {
-        item[SORT_NO_KEY] = startNo;
+        if (this.isShouldSort(field)) {
+          item[SORT_NO_KEY] = startNo;
+        }
         preItem = item;
         continue;
       }

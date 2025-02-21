@@ -69,7 +69,7 @@ export function splitIntoFragments(
           }
         } else {
           item[SORT_NO_KEY] = startIndex;
-          startIndex++;
+          ++startIndex;
         }
       });
     });
