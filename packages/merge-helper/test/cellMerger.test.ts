@@ -85,6 +85,19 @@ test('自动生成序号', () => {
   expect(result).toEqual(true);
 });
 
+test('不生成序号', () => {
+  const cellMerger = new CellMerger({
+    mode: Mode.Row,
+    dataSource: data.dataSource,
+    mergeFields: data.columns.map((item) => item.prop),
+  });
+  const mergedData = cellMerger.getMergedData();
+  const result = mergedData.every((item) => {
+    return !isNumber(item[SORT_NO_KEY]);
+  });
+  expect(result).toEqual(true);
+});
+
 test('列合并', () => {
   const options: CellMergerOptions = {
     mode: Mode.Col,
