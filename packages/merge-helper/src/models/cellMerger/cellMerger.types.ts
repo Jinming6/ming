@@ -1,4 +1,4 @@
-import { type Mode } from './enums';
+import { type Mode } from './cellMerger.enums';
 
 export interface MergeFieldItem {
   field: string;

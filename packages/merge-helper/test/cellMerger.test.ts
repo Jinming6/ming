@@ -3,12 +3,12 @@ import { CellMerger } from '../src/cellMerger';
 import type {
   CellMergerOptions,
   DataSourceItem,
-} from '../src/cellMerger/models/types';
+} from '../src/models/cellMerger/cellMerger.types';
 import {
   MERGE_OPTS_KEY,
   SORT_NO_KEY,
-} from '../src/cellMerger/models/constants';
-import data from '../data/data.json';
+} from '../src/models/cellMerger/cellMerger.constants';
+import data from '../examples/data.json';
 import { Mode, getFieldSpan } from '../src/main';
 import { getMergedData, getSortNo } from '../src/api';
 
@@ -16,7 +16,9 @@ const validMergedData = (mergedData: DataSourceItem[]): boolean => {
   const result = mergedData.every((item) => {
     const obj = isPlainObject(item) ? item[MERGE_OPTS_KEY] : null;
     const isValid =
-      obj != null && Object.keys(obj as Record<string, unknown>).length === 4;
+      obj != null &&
+      Object.keys(obj as Record<string, unknown>).length ===
+        data.columns.length;
     return isValid;
   });
   return result;

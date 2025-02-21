@@ -12,15 +12,19 @@ import type {
   DataSourceItem,
   MergeFieldItem,
   MergeFields,
-} from './models/types';
-import { MERGE_OPTS_KEY, ROW_KEY, SORT_NO_KEY } from './models/constants';
-import { Mode } from './models/enums';
+} from '../models/cellMerger/cellMerger.types';
+import {
+  MERGE_OPTS_KEY,
+  ROW_KEY,
+  SORT_NO_KEY,
+} from '../models/cellMerger/cellMerger.constants';
+import { Mode } from '../models/cellMerger/cellMerger.enums';
 import {
   getFirstMergeField,
   isValueInEnum,
   validateColumns,
   validateMergeFields,
-} from './models/helpers';
+} from '../models/cellMerger/cellMerger.helpers';
 import { warn } from '../shared/warning';
 
 export class CellMerger {

@@ -5,9 +5,12 @@ import {
   type CellMergerOptions,
   type DataSourceItem,
   type SplitIntoFragmentsOpts,
-} from '../cellMerger/models/types';
-import { getFirstMergeField } from '../cellMerger/models/helpers';
-import { MERGE_OPTS_KEY, SORT_NO_KEY } from '../cellMerger/models/constants';
+} from '../models/cellMerger/cellMerger.types';
+import { getFirstMergeField } from '../models/cellMerger/cellMerger.helpers';
+import {
+  MERGE_OPTS_KEY,
+  SORT_NO_KEY,
+} from '../models/cellMerger/cellMerger.constants';
 
 /**
  * 获取合并后的数据
